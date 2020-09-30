@@ -14,7 +14,7 @@ exports.getAllStatus = (req, res, next) => {
 
 exports.getAllPetitions = async (req, res, next) => {
   try {
-    const result = await petition.find();
+    const result = await petition.find().populate("owner");
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
