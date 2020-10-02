@@ -22,5 +22,37 @@ exports.getAllPetitions = async (req, res, next) => {
 };
 
 exports.addPetition = async (req, res, next) => {
-  next();
+  try {
+    let data = req.body;
+    await petition.create(data);
+    res.end();
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+exports.approveForvote = async (req, res, next) => {
+  let { status, owner } = req.body;
+  let filter = { "owner._id": owner._id };
+  let update = { status: status, canvote: true };
+  try {
+    const result = await petition.updateOne(filter, update);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+exports.finalApprove = async (req, res, next) => {};
+
+exports.rejectPetition = async (req, res, next) => {
+  let { owner } = req.body;
+  let filter = { "owner._id": owner._id };
+  let update = { status: "ปฏิเสธ" };
+  try {
+    const result = await petition.updateOne(filter, update);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
 };
