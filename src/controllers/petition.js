@@ -54,3 +54,24 @@ exports.addPetition = async (req, res, next) => {
   }
   // next();
 };
+
+exports.votePetition = async (req, res, next) => {
+  try {
+    const result = await petition.findByIdAndUpdate(
+      { _id: req.body.petID },
+      {
+        $inc: {
+          voteNum: 1,
+        },
+      },
+      { new: true }
+    );
+    console.log(result);
+    if (result.voteNum > 4) {
+      updateStatus(req.body.petID, petitionStatus.waiting_for_approved);
+    }
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendSuccessResponse(res, error);
+  }
+};
