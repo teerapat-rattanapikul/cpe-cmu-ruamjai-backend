@@ -5,3 +5,6 @@ router.get("/", controllers.petitionController.getAllPetitions);
 router.get("/status", controllers.petitionController.getAllStatus);
 router.post("/created", controllers.petitionController.addPetition);
 module.exports = router;
+router.post("/approved", controllers.petitionController.approveForvote);
+router.post("/finalApprove");
+router.post("/reject", controllers.petitionController.rejectPetition);
