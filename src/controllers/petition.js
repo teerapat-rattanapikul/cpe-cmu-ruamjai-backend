@@ -8,6 +8,7 @@ const petitionStatus = require("../database/model/petitionStatus");
 const petition = require("../database/model/petition");
 const user = require("../database/model/user");
 const { updateStatus } = require("../database/model/petitionStatus");
+const { splitCategory } = require("../helpers/splitCategory");
 exports.getAllStatus = (req, res, next) => {
   sendSuccessResponse(res, { petitionStatus });
 };
@@ -23,8 +24,9 @@ exports.getAllPetitions = async (req, res, next) => {
 
 exports.getMyPetitions = async (req, res, next) => {
   try {
-    const result = await petition.find({ owner: req.body.id });
-    sendSuccessResponse(res, { result });
+    const result = await petition.find({ owner: req.body.userId });
+    const petitions = splitCategory(result);
+    sendSuccessResponse(res, { petitions });
   } catch (error) {
     sendErrorResponse(res, error);
   }
