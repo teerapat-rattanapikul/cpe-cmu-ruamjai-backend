@@ -19,6 +19,7 @@ const petitionSchema = mongoose.Schema({
   voteNum: Number,
   approved: Boolean,
   canVote: Boolean,
+  approveNum: Number,
 });
 
 module.exports = mongoose.model("petitions", petitionSchema);

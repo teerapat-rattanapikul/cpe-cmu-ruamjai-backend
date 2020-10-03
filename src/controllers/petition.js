@@ -54,8 +54,8 @@ exports.getMyPetitions = async (req, res, next) => {
 };
 
 exports.addPetition = async (req, res, next) => {
-  try {
-    const person = await user.findById(req.body.owner);
+  try{
+  const person = await user.findById(req.body.owner);
     const result = await petition.create({
       type: req.body.type,
       owner: req.body.owner,
@@ -73,7 +73,52 @@ exports.addPetition = async (req, res, next) => {
   } catch (error) {
     sendSuccessResponse(res, error);
   }
-  // next();
+};
+
+exports.approveForvote = async (req, res, next) => {
+  let {  petitionId } = req.body;
+  let filter = { _id: petitionId };
+  let update = { status: petitionStatus.voting, canvote: true };
+  try {
+    const result = await petition.updateOne(filter, update);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+exports.finalApprove = async (req, res, next) => {
+  const totalTeacher = 10;
+  try {
+    let { petitionId } = req.body
+    const result = await petition.findByIdAndUpdate(
+      {'_id': petitionId},
+      {
+        $inc:{
+          approveNum : 1
+        }
+      }
+    )
+    console.log(result);
+    if(result.approveNum >= (totalTeacher*0.8)){
+      updateStatus(petitionId, petitionStatus.approved);
+    }
+    sendSuccessResponse(res,{result})
+  } catch (error) {
+    sendSuccessResponse(res,error)
+  }
+};
+
+exports.rejectPetition = async (req, res, next) => {
+  let { petitionId } = req.body;
+  let filter = { '_id': petitionId };
+  let update = { status: petitionStatus.reject };
+  try {
+    const result = await petition.updateOne(filter, update);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+
 };
 
 exports.votePetition = async (req, res, next) => {
