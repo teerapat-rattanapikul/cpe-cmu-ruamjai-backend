@@ -20,7 +20,7 @@ exports.getAllPetitionsVoting = async (req, res, next) => {
 //getrecent5petition 
 exports.getRecentPetitions = async (req, res, next) => {
   try {
-    const result = await petition.find({}).sort({createdDate : -1}).limit(10);
+    const result = await petition.find({status:petitionStatus.voting}).sort({createdDate : -1}).limit(10);
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
