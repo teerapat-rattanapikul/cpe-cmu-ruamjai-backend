@@ -18,6 +18,17 @@ exports.getAllPetitionsVoting = async (req, res, next) => {
   }
 };
 
+//getrecent5petition 
+exports.getRecentPetitions = async (req, res, next) => {
+  try {
+    const result = await petition.find({}).sort({createdDate : -1}).limit(10);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+//
+
 exports.getAllStatus = (req, res, next) => {
   sendSuccessResponse(res, { petitionStatus });
 };
