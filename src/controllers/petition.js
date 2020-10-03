@@ -8,7 +8,6 @@ const petitionStatus = require("../database/model/petitionStatus");
 const petition = require("../database/model/petition");
 const user = require("../database/model/user");
 
-
 exports.getAllPetitionsVoting = async (req, res, next) => {
   try {
     const result = await petition.find({status:petitionStatus.voting});
