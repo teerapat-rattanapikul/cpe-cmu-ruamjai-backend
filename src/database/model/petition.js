@@ -14,6 +14,7 @@ const petitionSchema = mongoose.Schema({
   },
   detail: detailData,
   sub_detail: [detailData],
+  createdDate: Date,
   status: String,
   voteNum: Number,
   approved: Boolean,
