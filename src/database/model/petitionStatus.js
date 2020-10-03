@@ -5,10 +5,10 @@ exports.waiting_for_voting = "กำลังรอการนำไปสู�
 exports.reject = "ปฏิเสธ";
 const petition = require("./petition");
 
-exports.updateStatus = async (petitinId, status) => {
+exports.updateStatus = async (petitionId, status) => {
   try {
     const result = await petition.updateOne(
-      { _id: petitinId },
+      { _id: petitionId },
       {
         $set: {
           status,
