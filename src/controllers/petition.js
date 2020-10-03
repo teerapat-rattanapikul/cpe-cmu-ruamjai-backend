@@ -29,6 +29,7 @@ exports.getRecentPetitions = async (req, res, next) => {
 //
 
 const { updateStatus } = require("../database/model/petitionStatus");
+const { splitCategory } = require("../helpers/splitCategory");
 exports.getAllStatus = (req, res, next) => {
   sendSuccessResponse(res, { petitionStatus });
 };
@@ -44,8 +45,9 @@ exports.getAllPetitions = async (req, res, next) => {
 
 exports.getMyPetitions = async (req, res, next) => {
   try {
-    const result = await petition.find({ owner: req.body.id });
-    sendSuccessResponse(res, { result });
+    const result = await petition.find({ owner: req.body.userId });
+    const petitions = splitCategory(result);
+    sendSuccessResponse(res, { petitions });
   } catch (error) {
     sendErrorResponse(res, error);
   }
@@ -72,4 +74,25 @@ exports.addPetition = async (req, res, next) => {
     sendSuccessResponse(res, error);
   }
   // next();
+};
+
+exports.votePetition = async (req, res, next) => {
+  try {
+    const result = await petition.findByIdAndUpdate(
+      { _id: req.body.petID },
+      {
+        $inc: {
+          voteNum: 1,
+        },
+      },
+      { new: true }
+    );
+    console.log(result);
+    if (result.voteNum > 4) {
+      updateStatus(req.body.petID, petitionStatus.waiting_for_approved);
+    }
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendSuccessResponse(res, error);
+  }
 };

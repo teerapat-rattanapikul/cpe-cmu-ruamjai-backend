@@ -15,8 +15,7 @@ exports.updateStatus = async (petitinId, status) => {
         },
       }
     );
-    sendSuccessResponse(res, { result });
   } catch (error) {
-    sendSuccessResponse(res, error);
+    throw error;
   }
 };
