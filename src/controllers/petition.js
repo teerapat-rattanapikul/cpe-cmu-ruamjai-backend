@@ -32,9 +32,9 @@ exports.addPetition = async (req, res, next) => {
 };
 
 exports.approveForvote = async (req, res, next) => {
-  let { status, owner } = req.body;
-  let filter = { "owner._id": owner._id };
-  let update = { status: status, canvote: true };
+  let { status, petitionId } = req.body;
+  let filter = { _id: petitionId };
+  let update = { status: petitionStatus.voting, canvote: true };
   try {
     const result = await petition.updateOne(filter, update);
     sendSuccessResponse(res, { result });
@@ -43,7 +43,9 @@ exports.approveForvote = async (req, res, next) => {
   }
 };
 
-exports.finalApprove = async (req, res, next) => {};
+exports.finalApprove = async (req, res, next) => {
+  const totalTeacher = 10;
+};
 
 exports.rejectPetition = async (req, res, next) => {
   let { owner } = req.body;
