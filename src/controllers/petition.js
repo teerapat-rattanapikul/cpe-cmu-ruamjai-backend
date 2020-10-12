@@ -148,8 +148,10 @@ exports.votePetition = async (req, res, next) => {
 };
 
 exports.filterPetitions = async (req, res, next) => {
+  let { types } = req.body;
+  let filter = { type: { $in: types } };
   try {
-    const result = await petition.find({ type: petitionTypes[req.body.type] });
+    const result = await petition.find(filter);
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendSuccessResponse(res, error);
