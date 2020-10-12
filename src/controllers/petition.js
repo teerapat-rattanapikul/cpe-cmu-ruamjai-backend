@@ -100,7 +100,8 @@ exports.finalApprove = async (req, res, next) => {
         $inc: {
           approveNum: 1,
         },
-      }
+      },
+      { new: true }
     );
     console.log(result);
     if (result.approveNum >= totalTeacher * 0.8) {
