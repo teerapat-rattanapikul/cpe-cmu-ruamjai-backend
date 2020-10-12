@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
       ref: "petitions",
     },
   ],
+  username: String,
+  password: String,
 });
 
 module.exports = mongoose.model("users", userSchema);
