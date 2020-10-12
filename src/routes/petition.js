@@ -7,6 +7,7 @@ router.get("/recent", controllers.petitionController.getRecentPetitions);
 router.post("/myPetitions", controllers.petitionController.getMyPetitions);
 router.post("/add", controllers.petitionController.addPetition);
 router.post("/vote", controllers.petitionController.votePetition);
+router.post("/filter", controllers.petitionController.filterPetitions);
 
 router.post("/approved", controllers.petitionController.approveForvote);
 //router.post("/finalApprove");

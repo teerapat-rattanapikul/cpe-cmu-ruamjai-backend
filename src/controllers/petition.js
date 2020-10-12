@@ -5,6 +5,7 @@ const {
 } = require("../helpers/apiResponse");
 
 const petitionStatus = require("../database/model/petitionStatus");
+const petitionTypes = require("../database/model/petitionTypes");
 const petition = require("../database/model/petition");
 const user = require("../database/model/user");
 
@@ -140,6 +141,17 @@ exports.votePetition = async (req, res, next) => {
     if (result.voteNum > 4) {
       updateStatus(req.body.petID, petitionStatus.waiting_for_approved);
     }
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendSuccessResponse(res, error);
+  }
+};
+
+exports.filterPetitions = async (req, res, next) => {
+  let { types } = req.body;
+  let filter = { type: { $in: types } };
+  try {
+    const result = await petition.find(filter);
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendSuccessResponse(res, error);
