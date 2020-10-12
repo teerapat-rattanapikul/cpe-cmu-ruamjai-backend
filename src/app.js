@@ -8,7 +8,7 @@ const apiRoutes = require("./routes/api");
 require("dotenv").config(__dirname + "../../.env");
 require("./database/mongo");
 
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true , origin : true }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 
