@@ -7,4 +7,5 @@ router.get("/recent", controllers.petitionController.getRecentPetitions);
 router.post("/filter", controllers.petitionController.filterPetitions);
 router.get("/type", controllers.petitionController.getPetitionType);
 router.get("/trending", controllers.petitionController.getTrendingPetitions);
+router.post("/search", controllers.petitionController.getSearch);
 module.exports = router;
