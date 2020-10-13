@@ -10,6 +10,7 @@ const petitionStatus = require("../database/model/petitionStatus");
 const { updateStatus } = require("../database/model/petitionStatus");
 const petitionTypes = require("../database/model/petitionTypes");
 const genJWT = require("../services/genJWT");
+const { checkContain } = require("../helpers/checkContain");
 
 exports.login = async (req, res, next) => {
   try {
@@ -21,45 +22,64 @@ exports.login = async (req, res, next) => {
     } else if (USER.password !== passWord) {
       sendSuccessResponse(res, "wrong password");
     }
-
-    const token = genJWT(USER);
+    const token = genJWT({
+      userId: USER.id,
+      role: USER.role,
+    });
     sendSuccessResponse(res, { token, USER });
   } catch (error) {
     sendErrorResponse(res, error);
   }
 };
-exports.doSomething = async (req, res) => {
-  res.json("do somthring");
+exports.getMyProfile = async (req, res, next) => {
+  let { userId } = req;
+  try {
+    const data = await user.findById(userId).select("-password");
+    sendSuccessResponse(res, { data });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
 };
+
 exports.votePetition = async (req, res, next) => {
   let { petitionId } = req.body;
+  let { userId } = req;
+  console.log(userId);
   try {
-    const result = await petition.findByIdAndUpdate(
-      { _id: petitionId },
-      {
-        $inc: {
-          voteNum: 1,
+    const person = await user.findById(userId);
+    const check = checkContain(person.votedPetitoins, petitionId);
+    if (!check) {
+      const result = await petition.findByIdAndUpdate(
+        { _id: petitionId },
+        {
+          $inc: {
+            voteNum: 1,
+          },
         },
-      },
-      { new: true }
-    );
-    console.log(result);
-    if (result.voteNum > 4) {
-      updateStatus(petitionId, petitionStatus.waiting_for_approved);
+        { new: true }
+      );
+      if (result.voteNum > 4) {
+        updateStatus(petitionId, petitionStatus.waiting_for_approved);
+      }
+      person.votedPetitoins.unshift(result._id);
+      await person.save();
+      sendSuccessResponse(res, { result });
+    } else {
+      sendSuccessResponse(res, "คุณเคยทำการโหวตคำร้องนี้ไปแล้ว");
     }
-    sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
   }
 };
 
 exports.addPetition = async (req, res, next) => {
-  let { owner, type, detail, subDetail } = req.body;
+  let { type, detail, subDetail } = req.body;
+  let { userId } = req;
   try {
-    const person = await user.findById(owner);
+    const person = await user.findById(userId);
     const result = await petition.create({
       type: type,
-      owner: owner,
+      owner: userId,
       detail: detail,
       sub_detail: subDetail,
       createdDate: Date.now(),
@@ -78,7 +98,6 @@ exports.addPetition = async (req, res, next) => {
 
 exports.getMyPetitions = async (req, res, next) => {
   let { userId } = req;
-  console.log(userId);
   let filter = { owner: userId };
   try {
     const result = await petition.find(filter);
@@ -93,9 +112,9 @@ exports.getMyPetitions = async (req, res, next) => {
 exports.approveForvote = async (req, res, next) => {
   let { petitionId } = req.body;
   let filter = { _id: petitionId };
-
+  let { role } = req;
   let update = { status: petitionStatus.voting, canVote: true };
-  if (req.role === "admin") {
+  if (role === "admin") {
     try {
       const result = await petition.updateOne(filter, { $set: update });
       sendSuccessResponse(res, { result });
@@ -109,10 +128,10 @@ exports.approveForvote = async (req, res, next) => {
 
 exports.finalApprove = async (req, res, next) => {
   const totalTeacher = 10;
-  if (req.role === "admin") {
+  let { role } = req;
+  if (role === "admin") {
     try {
       let { petitionId } = req.body;
-      console.log(petitionId);
       const result = await petition.findByIdAndUpdate(
         petitionId,
         {
@@ -138,7 +157,8 @@ exports.rejectPetition = async (req, res, next) => {
   let { petitionId } = req.body;
   let filter = { _id: petitionId };
   let update = { status: petitionStatus.reject };
-  if (req.role === "admin") {
+  let { role } = req;
+  if (role === "admin") {
     try {
       const result = await petition.updateOne(filter, update);
       sendSuccessResponse(res, { result });
