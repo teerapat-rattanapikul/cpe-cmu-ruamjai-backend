@@ -16,9 +16,7 @@ exports.getAllPetitionsVoting = async (req, res, next) => {
     sendErrorResponse(res, error);
   }
 };
-exports.getPetitionType = (req, res) => {
-  sendSuccessResponse(res, { petitionTypes });
-};
+
 exports.getRecentPetitions = async (req, res, next) => {
   try {
     const result = await petition
@@ -41,12 +39,6 @@ exports.getTrendingPetitions = async (req, res, next) => {
   } catch (error) {
     sendErrorResponse(res, error);
   }
-};
-
-//
-
-exports.getAllStatus = (req, res, next) => {
-  sendSuccessResponse(res, { petitionStatus });
 };
 
 exports.getAllPetitions = async (req, res, next) => {
