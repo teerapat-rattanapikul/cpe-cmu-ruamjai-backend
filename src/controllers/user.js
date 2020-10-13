@@ -107,6 +107,9 @@ exports.addPetition = async (req, res, next) => {
       voteNum: 0,
       approved: false,
       canVote: false,
+      rejectNum: 0,
+      approveNum: 0,
+      rejectReason: "",
     });
     person.petitions.unshift(result._id);
     await person.save();
