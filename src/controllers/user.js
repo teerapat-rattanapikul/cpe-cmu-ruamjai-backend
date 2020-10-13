@@ -18,9 +18,9 @@ exports.login = async (req, res, next) => {
     const passWord = req.body.password;
     const USER = await user.findOne({ username: userName });
     if (USER === null) {
-      sendSuccessResponse(res, "wrong username");
+      sendErrorResponse(res, "wrong username");
     } else if (USER.password !== passWord) {
-      sendSuccessResponse(res, "wrong password");
+      sendErrorResponse(res, "wrong password");
     }
     const token = genJWT({
       userId: USER.id,
@@ -65,7 +65,7 @@ exports.votePetition = async (req, res, next) => {
       await person.save();
       sendSuccessResponse(res, { result });
     } else {
-      sendSuccessResponse(res, "คุณเคยทำการโหวตคำร้องนี้ไปแล้ว");
+      sendErrorResponse(res, "คุณเคยทำการโหวตคำร้องนี้ไปแล้ว");
     }
   } catch (error) {
     sendErrorResponse(res, error);
@@ -122,7 +122,7 @@ exports.approveForvote = async (req, res, next) => {
       sendErrorResponse(res, error);
     }
   } else {
-    sendSuccessResponse(res, "ไม่สามารถทำการอนุมัติได้");
+    sendErrorResponse(res, "ไม่สามารถทำการอนุมัติได้");
   }
 };
 
@@ -150,7 +150,7 @@ exports.finalApprove = async (req, res, next) => {
       console.log(error);
       sendSuccessResponse(res, error);
     }
-  } else sendSuccessResponse(res, "ไม่สามารถทำการอนุมัติได้");
+  } else sendErrorResponse(res, "ไม่สามารถทำการอนุมัติได้");
 };
 
 exports.rejectPetition = async (req, res, next) => {
@@ -165,5 +165,5 @@ exports.rejectPetition = async (req, res, next) => {
     } catch (error) {
       sendErrorResponse(res, error);
     }
-  } else sendSuccessResponse(res, "ไม่สามารถทำการอนุมัติได้");
+  } else sendErrorResponse(res, "ไม่สามารถทำการอนุมัติได้");
 };
