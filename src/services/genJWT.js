@@ -8,7 +8,7 @@ const genJWT = (user) => {
     },
     "secret_key",
     {
-      expiresIn: "7d",
+      // expiresIn: "7d",
     }
   );
 };

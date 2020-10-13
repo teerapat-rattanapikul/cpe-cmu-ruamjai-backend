@@ -10,12 +10,10 @@ module.exports = () => (req, res, next) => {
 
     const token = authorization.replace("Bearer ", "");
     const decoded = jwt.verify(token, "secret_key");
-
-    // console.log(decoded);
-
     const user = decoded.user;
     req.role = user.role;
-    req.userId = user._id;
+    req.userId = user.userId;
+
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
