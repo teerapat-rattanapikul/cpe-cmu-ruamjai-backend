@@ -71,10 +71,9 @@ exports.filterPetitions = async (req, res, next) => {
 
 exports.findPetitionById = async (req, res, next) => {
   let { id } = req.params;
-  let filter = { _id: id };
   try {
-    const result = await petition.findOne(filter);
-    sendErrorResponse(res, { result });
+    const result = await petition.findById(id);
+    sendSuccessResponse(res, { result });
   } catch (err) {
     sendErrorResponse(res, err);
   }
