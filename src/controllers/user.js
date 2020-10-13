@@ -79,7 +79,7 @@ exports.votePetition = async (req, res, next) => {
         },
         { new: true }
       );
-      if (result.voteNum > 4) {
+      if (result.voteNum > 1) {
         updateStatus(petitionId, petitionStatus.waiting_for_approved);
       }
       person.votedPetitoins.unshift(result._id);
@@ -148,7 +148,7 @@ exports.approveForvote = async (req, res, next) => {
 };
 
 exports.finalApprove = async (req, res, next) => {
-  const totalTeacher = 10;
+  const totalTeacher = 3;
   let { role } = req;
   if (role === "admin") {
     try {
