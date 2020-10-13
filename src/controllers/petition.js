@@ -30,6 +30,19 @@ exports.getRecentPetitions = async (req, res, next) => {
     sendErrorResponse(res, error);
   }
 };
+
+exports.getTrendingPetitions = async (req, res, next) => {
+  try {
+    const result = await petition
+      .find({ status: petitionStatus.voting })
+      .sort({ voteNum: -1 })
+      .limit(10);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
 //
 
 const { updateStatus } = require("../database/model/petitionStatus");
@@ -161,3 +174,5 @@ exports.filterPetitions = async (req, res, next) => {
     sendSuccessResponse(res, error);
   }
 };
+
+
