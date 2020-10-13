@@ -79,53 +79,6 @@ exports.addPetition = async (req, res, next) => {
   }
 };
 
-exports.approveForvote = async (req, res, next) => {
-  let { petitionId } = req.body;
-  let filter = { _id: petitionId };
-  let update = { status: petitionStatus.voting, canvote: true };
-  try {
-    const result = await petition.updateOne(filter, update);
-    sendSuccessResponse(res, { result });
-  } catch (error) {
-    sendErrorResponse(res, error);
-  }
-};
-
-exports.finalApprove = async (req, res, next) => {
-  const totalTeacher = 10;
-  try {
-    let { petitionId } = req.body;
-    const result = await petition.findByIdAndUpdate(
-      { _id: petitionId },
-      {
-        $inc: {
-          approveNum: 1,
-        },
-      },
-      { new: true }
-    );
-    console.log(result);
-    if (result.approveNum >= totalTeacher * 0.8) {
-      updateStatus(petitionId, petitionStatus.approved);
-    }
-    sendSuccessResponse(res, { result });
-  } catch (error) {
-    sendSuccessResponse(res, error);
-  }
-};
-
-exports.rejectPetition = async (req, res, next) => {
-  let { petitionId } = req.body;
-  let filter = { _id: petitionId };
-  let update = { status: petitionStatus.reject };
-  try {
-    const result = await petition.updateOne(filter, update);
-    sendSuccessResponse(res, { result });
-  } catch (error) {
-    sendErrorResponse(res, error);
-  }
-};
-
 exports.votePetition = async (req, res, next) => {
   try {
     const result = await petition.findByIdAndUpdate(
@@ -143,7 +96,7 @@ exports.votePetition = async (req, res, next) => {
     }
     sendSuccessResponse(res, { result });
   } catch (error) {
-    sendSuccessResponse(res, error);
+    sendErrorResponse(res, error);
   }
 };
 
@@ -154,6 +107,6 @@ exports.filterPetitions = async (req, res, next) => {
     const result = await petition.find(filter);
     sendSuccessResponse(res, { result });
   } catch (error) {
-    sendSuccessResponse(res, error);
+    sendErrorResponse(res, error);
   }
 };
