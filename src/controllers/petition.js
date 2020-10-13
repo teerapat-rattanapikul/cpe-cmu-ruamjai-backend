@@ -44,11 +44,10 @@ exports.getTrendingPetitions = async (req, res, next) => {
 };
 
 exports.getSearch = async (req, res, next) => {
-  let {keyword} = req.body ;
-  let filter = { "detail.topic" :  { $regex: keyword, $options: "i" } }
+  let { keyword } = req.body;
+  let filter = { "detail.topic": { $regex: keyword, $options: "i" } };
   try {
-    const result = await petition
-      .find(filter);
+    const result = await petition.find(filter);
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
@@ -184,5 +183,3 @@ exports.filterPetitions = async (req, res, next) => {
     sendSuccessResponse(res, error);
   }
 };
-
-

@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
       ref: "petitions",
     },
   ],
+  votedPetitoins: [{ type: mongoose.Schema.Types.ObjectId, ref: "petitions" }],
   username: String,
   password: String,
 });
