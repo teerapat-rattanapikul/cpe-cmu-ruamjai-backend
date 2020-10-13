@@ -5,7 +5,6 @@ const {
 } = require("../helpers/apiResponse");
 
 const petitionStatus = require("../database/model/petitionStatus");
-const petitionTypes = require("../database/model/petitionTypes");
 const petition = require("../database/model/petition");
 
 exports.getAllPetitionsVoting = async (req, res, next) => {
