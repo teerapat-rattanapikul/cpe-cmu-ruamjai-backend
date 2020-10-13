@@ -43,18 +43,23 @@ exports.getMyProfile = async (req, res, next) => {
 
 exports.adminTeacherGetPetitions = async (req, res, next) => {
   let { role } = req;
-  if (role === "admin") {
-    const result = await petition.find({
-      status: petitionStatus.waiting_for_voting,
-    });
-    sendSuccessResponse(res, { result });
-  } else if (role === "teacher") {
-    const result = await petition.find({
-      status: petitionStatus.waiting_for_approved,
-    });
-    sendSuccessResponse(res, { result });
+  try {
+    if (role === "admin") {
+      const result = await petition.find({
+        status: petitionStatus.waiting_for_voting,
+      });
+      sendSuccessResponse(res, { result });
+    } else if (role === "teacher") {
+      const result = await petition.find({
+        status: petitionStatus.waiting_for_approved,
+      });
+      sendSuccessResponse(res, { result });
+    } else {
+      sendSuccessResponse(res, {});
+    }
+  } catch (error) {
+    sendErrorResponse(res, error);
   }
-  sendErrorResponse(res, error);
 };
 
 exports.votePetition = async (req, res, next) => {
