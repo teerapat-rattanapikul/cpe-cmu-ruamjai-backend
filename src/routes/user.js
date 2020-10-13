@@ -10,5 +10,9 @@ router.post("/reject", verify(), controllers.userController.rejectPetition);
 router.post("/vote", verify(), controllers.userController.votePetition);
 router.post("/add", verify(), controllers.userController.addPetition);
 router.get("/myPetitions", verify(), controllers.userController.getMyPetitions);
+router.get(
+  "/pettionApprove",
+  controllers.userController.adminTeacherGetPetitions
+);
 
 module.exports = router;
