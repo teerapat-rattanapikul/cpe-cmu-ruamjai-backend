@@ -68,6 +68,14 @@ exports.filterPetitions = async (req, res, next) => {
     sendErrorResponse(res, error);
   }
 };
+exports.getSearch = async (req, res, next) => {
+  let { keyword } = req.body;
+  let filter = { "detail.topic": { $regex: keyword, $options: "i" } };
+  try {
+    const result = await petition.find(filter);
+    sendSuccessResponse(res, { result });
+  } catch (error) {
+    sendErrorResponse(res, error);
 
 exports.findPetitionById = async (req, res, next) => {
   let { id } = req.params;
