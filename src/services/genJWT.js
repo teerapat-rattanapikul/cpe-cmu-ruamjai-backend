@@ -9,7 +9,7 @@ const genJWT = (userId, isAdmin = false) => {
     },
     "secret_key",
     {
-      //   expiresIn: "1d",
+      expiresIn: "1d",
     }
   );
 };

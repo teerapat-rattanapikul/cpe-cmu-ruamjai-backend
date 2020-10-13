@@ -5,7 +5,7 @@ module.exports = () => (req, res, next) => {
   try {
     const authorization = req.header("Authorization");
     if (authorization === undefined) {
-      throw apiError("ต้องมี Authorization header");
+      apiError("ต้องมี Authorization header");
     }
 
     const token = authorization.replace("Bearer ", "");
@@ -13,12 +13,10 @@ module.exports = () => (req, res, next) => {
 
     // console.log(decoded);
 
-    req.userId = decoded.userId;
-    // console.log(req.userId);
+    const user = decoded.userId;
+    req.role = user.role;
     next();
   } catch (error) {
-    if (alwaysPass) return next();
-
     if (error instanceof jwt.JsonWebTokenError) {
       error.status = 401;
     }
