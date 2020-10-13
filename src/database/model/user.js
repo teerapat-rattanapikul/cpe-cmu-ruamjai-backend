@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema({
     },
   ],
   votedPetitions: [{ type: mongoose.Schema.Types.ObjectId, ref: "petitions" }],
+  approvedPetitions: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "petitions" },
+  ],
   username: String,
   password: String,
 });

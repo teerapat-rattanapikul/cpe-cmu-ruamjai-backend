@@ -151,7 +151,7 @@ exports.finalApprove = async (req, res, next) => {
   let { role, userId } = req;
   let { petitionId } = req.body;
   const person = await user.findById(userId);
-  const check = checkContain(person.votedPetitions, petitionId);
+  const check = checkContain(person.approvedPetitions, petitionId);
   try {
     if (role === "teacher" && check === false) {
       const result = await petition.findByIdAndUpdate(
@@ -163,7 +163,7 @@ exports.finalApprove = async (req, res, next) => {
         },
         { new: true }
       );
-      person.votedPetitions.unshift(result._id);
+      person.approvedPetitions.unshift(result._id);
       await person.save();
       if (result.approveNum >= totalTeacher * 0.8) {
         updateStatus(petitionId, petitionStatus.approved);
@@ -181,7 +181,7 @@ exports.finalReject = async (req, res, next) => {
   let { role, userId } = req;
   let reject = { rejectReason: "ไม่ผ่านการลงคะแนนของอาจารย์" };
   const person = await user.findById(userId);
-  const check = checkContain(person.votedPetitions, petitionId);
+  const check = checkContain(person.approvedPetitions, petitionId);
   try {
     if (role === "teacher" && check === false) {
       const result = await petition.findByIdAndUpdate(
@@ -193,7 +193,7 @@ exports.finalReject = async (req, res, next) => {
         },
         { new: true }
       );
-      person.votedPetitions.unshift(result._id);
+      person.approvedPetitions.unshift(result._id);
       await person.save();
       if (result.rejectNum >= totalTeacher * 0.8) {
         updateStatus(petitionId, petitionStatus.reject);
