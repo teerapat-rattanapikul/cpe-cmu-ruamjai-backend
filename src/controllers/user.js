@@ -134,7 +134,7 @@ exports.finalApprove = async (req, res, next) => {
 };
 
 exports.rejectPetition = async (req, res, next) => {
-  let { petitionId } = req.body;
+  let petitionId = req.body._id;
   let filter = { _id: petitionId };
   let update = { status: petitionStatus.reject };
   if (req.role === "admin") {
