@@ -72,7 +72,7 @@ exports.filterPetitions = async (req, res, next) => {
 exports.findPetitionById = async (req, res, next) => {
   let { id } = req.params;
   try {
-    const result = await petition.findById(id);
+    const result = await petition.findById(id).populate("owner");
     sendSuccessResponse(res, { result });
   } catch (err) {
     sendErrorResponse(res, err);
