@@ -13,8 +13,9 @@ module.exports = () => (req, res, next) => {
 
     // console.log(decoded);
 
-    const user = decoded.userId;
+    const user = decoded.user;
     req.role = user.role;
+    req.userId = user._id;
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

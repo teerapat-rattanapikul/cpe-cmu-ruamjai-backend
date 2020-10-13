@@ -3,7 +3,7 @@ const {
   sendErrorResponse,
   apiError,
 } = require("../helpers/apiResponse");
-
+const { splitCategory } = require("../helpers/splitCategory");
 const petition = require("../database/model/petition");
 const user = require("../database/model/user");
 const petitionStatus = require("../database/model/petitionStatus");
@@ -77,7 +77,8 @@ exports.addPetition = async (req, res, next) => {
 };
 
 exports.getMyPetitions = async (req, res, next) => {
-  let { userId } = req.body;
+  let { userId } = req;
+  console.log(userId);
   let filter = { owner: userId };
   try {
     const result = await petition.find(filter);
@@ -90,7 +91,7 @@ exports.getMyPetitions = async (req, res, next) => {
 // admin //
 
 exports.approveForvote = async (req, res, next) => {
-  let petitionId = req.body._id;
+  let { petitionId } = req.body;
   let filter = { _id: petitionId };
 
   let update = { status: petitionStatus.voting, canVote: true };
@@ -110,7 +111,7 @@ exports.finalApprove = async (req, res, next) => {
   const totalTeacher = 10;
   if (req.role === "admin") {
     try {
-      let petitionId = req.body._id;
+      let { petitionId } = req.body;
       console.log(petitionId);
       const result = await petition.findByIdAndUpdate(
         petitionId,
@@ -134,7 +135,7 @@ exports.finalApprove = async (req, res, next) => {
 };
 
 exports.rejectPetition = async (req, res, next) => {
-  let petitionId = req.body._id;
+  let { petitionId } = req.body;
   let filter = { _id: petitionId };
   let update = { status: petitionStatus.reject };
   if (req.role === "admin") {

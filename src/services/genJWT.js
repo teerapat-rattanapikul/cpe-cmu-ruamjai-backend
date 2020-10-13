@@ -1,15 +1,14 @@
 const jwt = require("jsonwebtoken");
 // const { JWT_KEY, JWT_EXPIRE_TIME } = process.env;
 
-const genJWT = (userId, isAdmin = false) => {
+const genJWT = (user) => {
   return jwt.sign(
     {
-      userId: userId,
-      isAdmin: isAdmin,
+      user: user,
     },
     "secret_key",
     {
-      expiresIn: "1d",
+      expiresIn: "7d",
     }
   );
 };
