@@ -68,7 +68,6 @@ exports.filterPetitions = async (req, res, next) => {
     sendErrorResponse(res, error);
   }
 };
-
 exports.getSearch = async (req, res, next) => {
   let { keyword } = req.body;
   let filter = { "detail.topic": { $regex: keyword, $options: "i" } };
@@ -77,5 +76,13 @@ exports.getSearch = async (req, res, next) => {
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
+
+exports.findPetitionById = async (req, res, next) => {
+  let { id } = req.params;
+  try {
+    const result = await petition.findById(id).populate("owner");
+    sendSuccessResponse(res, { result });
+  } catch (err) {
+    sendErrorResponse(res, err);
   }
 };
