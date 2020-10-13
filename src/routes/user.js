@@ -11,7 +11,7 @@ router.post("/vote", verify(), controllers.userController.votePetition);
 router.post("/add", verify(), controllers.userController.addPetition);
 router.get("/myPetitions", verify(), controllers.userController.getMyPetitions);
 router.get(
-  "/pettionApprove",
+  "/petitionApprove",
   verify(),
   controllers.userController.adminTeacherGetPetitions
 );
