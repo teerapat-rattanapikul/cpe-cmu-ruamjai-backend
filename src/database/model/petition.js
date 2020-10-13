@@ -20,6 +20,8 @@ const petitionSchema = mongoose.Schema({
   approved: Boolean,
   canVote: Boolean,
   approveNum: Number,
+  rejectNum: Number,
+  rejectReason: String,
 });
 
 module.exports = mongoose.model("petitions", petitionSchema);

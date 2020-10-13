@@ -15,5 +15,6 @@ router.get(
   verify(),
   controllers.userController.adminTeacherGetPetitions
 );
+router.post("/finalReject", verify(), controllers.userController.finalReject);
 
 module.exports = router;

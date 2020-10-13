@@ -65,7 +65,6 @@ exports.adminTeacherGetPetitions = async (req, res, next) => {
 exports.votePetition = async (req, res, next) => {
   let { petitionId } = req.body;
   let { userId } = req;
-  console.log(userId);
   try {
     const person = await user.findById(userId);
     const check = checkContain(person.votedPetitoins, petitionId);
@@ -150,7 +149,7 @@ exports.approveForvote = async (req, res, next) => {
 exports.finalApprove = async (req, res, next) => {
   const totalTeacher = 3;
   let { role } = req;
-  if (role === "admin") {
+  if (role === "teacher") {
     try {
       let { petitionId } = req.body;
       const result = await petition.findByIdAndUpdate(
@@ -162,7 +161,6 @@ exports.finalApprove = async (req, res, next) => {
         },
         { new: true }
       );
-      console.log(result);
       if (result.approveNum >= totalTeacher * 0.8) {
         updateStatus(petitionId, petitionStatus.approved);
       }
@@ -174,14 +172,46 @@ exports.finalApprove = async (req, res, next) => {
   } else sendErrorResponse(res, error);
 };
 
+exports.finalReject = async (req, res, next) => {
+  const totalTeacher = 3;
+  let { role } = req;
+  let filter = { _id: petitionId };
+  let reject = { rejectReason: "ไม่ผ่านการลงคะแนนของอาจารย์" };
+  if (role === "teacher") {
+    try {
+      let { petitionId } = req.body;
+      const result = await petition.findByIdAndUpdate(
+        petitionId,
+        {
+          $inc: {
+            rejectNum: 1,
+          },
+        },
+        { new: true }
+      );
+      if (result.rejectNum >= totalTeacher * 0.8) {
+        updateStatus(petitionId, petitionStatus.reject);
+        const resultReject = await petition.updateOne(filter, reject);
+        sendSuccessResponse(res, { resultReject });
+      } else {
+        sendSuccessResponse(res, { result });
+      }
+    } catch (error) {
+      console.log(error);
+      sendSuccessResponse(res, error);
+    }
+  } else sendErrorResponse(res, error);
+};
+
 exports.rejectPetition = async (req, res, next) => {
-  let { petitionId } = req.body;
+  let { petitionId, Reason } = req.body;
   let filter = { _id: petitionId };
   let update = { status: petitionStatus.reject };
+  let reject = { rejectReason: Reason };
   let { role } = req;
   if (role === "admin") {
     try {
-      const result = await petition.updateOne(filter, update);
+      const result = await petition.updateOne(filter, update, reject);
       sendSuccessResponse(res, { result });
     } catch (error) {
       sendErrorResponse(res, error);
