@@ -15,8 +15,14 @@ exports.sendErrorResponse = (res, error, status = 500) => {
   });
 };
 
-exports.apiError = (message, status = 500) => {
+exports.apiError = (res, message, status = 500) => {
   const error = new Error(message);
   error.code = status;
-  return error;
+  return res.status(status).json({
+    error: {
+      code: status,
+      message,
+    },
+    success: false,
+  });
 };
