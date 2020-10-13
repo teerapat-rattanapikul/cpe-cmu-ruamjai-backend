@@ -76,7 +76,8 @@ exports.getSearch = async (req, res, next) => {
     sendSuccessResponse(res, { result });
   } catch (error) {
     sendErrorResponse(res, error);
-
+  }
+};
 exports.findPetitionById = async (req, res, next) => {
   let { id } = req.params;
   try {
