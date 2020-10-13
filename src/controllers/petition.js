@@ -48,8 +48,10 @@ exports.getAllPetitions = async (req, res, next) => {
 };
 
 exports.getMyPetitions = async (req, res, next) => {
+  let { userId } = req.body;
+  let filter = { owner: userId };
   try {
-    const result = await petition.find({ owner: req.body.userId });
+    const result = await petition.find(filter);
     const petitions = splitCategory(result);
     sendSuccessResponse(res, { petitions });
   } catch (error) {
@@ -58,13 +60,14 @@ exports.getMyPetitions = async (req, res, next) => {
 };
 
 exports.addPetition = async (req, res, next) => {
+  let { owner, type, detail, subDetail } = req.body;
   try {
-    const person = await user.findById(req.body.owner);
+    const person = await user.findById(owner);
     const result = await petition.create({
-      type: req.body.type,
-      owner: req.body.owner,
-      detail: req.body.detail,
-      sub_detail: req.body.subDetail,
+      type: type,
+      owner: owner,
+      detail: detail,
+      sub_detail: subDetail,
       createdDate: Date.now(),
       status: petitionStatus.waiting_for_voting,
       voteNum: 0,
@@ -80,9 +83,10 @@ exports.addPetition = async (req, res, next) => {
 };
 
 exports.votePetition = async (req, res, next) => {
+  let { petitionId } = req.body;
   try {
     const result = await petition.findByIdAndUpdate(
-      { _id: req.body.petID },
+      { _id: petitionId },
       {
         $inc: {
           voteNum: 1,
@@ -92,7 +96,7 @@ exports.votePetition = async (req, res, next) => {
     );
     console.log(result);
     if (result.voteNum > 4) {
-      updateStatus(req.body.petID, petitionStatus.waiting_for_approved);
+      updateStatus(petitionId, petitionStatus.waiting_for_approved);
     }
     sendSuccessResponse(res, { result });
   } catch (error) {
