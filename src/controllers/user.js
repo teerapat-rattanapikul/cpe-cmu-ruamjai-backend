@@ -78,7 +78,7 @@ exports.votePetition = async (req, res, next) => {
         },
         { new: true }
       );
-      if (result.voteNum > 1) {
+      if (result.voteNum > 2) {
         updateStatus(petitionId, petitionStatus.waiting_for_approved);
       }
       person.votedPetitions.unshift(result._id);
