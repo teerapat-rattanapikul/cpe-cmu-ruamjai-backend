@@ -1,6 +1,6 @@
 <h1>CPE-RUAMJAI SERVER</h1>
 <hr>
-server use node.js express to implement code back-end AND use mongodb database<br>
+(server use node.js express to implement code back-end AND use mongodb database)<br>
 cp .env.example .env<br>
 npm install<br>
 npm run dev<br>
